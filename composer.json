@@ -14,13 +14,17 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "require-dev": {
-        "fakerphp/faker": "^1.21"
+        "fakerphp/faker": "^1.21",
+        "phpunit/phpunit": "^9.5"
     },
     "scripts": {
-        "db:seed": "php database/seed.php"
+        "db:seed": "php database/seed.php",
+        "test": "docker compose run --rm app vendor/bin/phpunit",
+        "test:local": "docker compose run --rm app vendor/bin/phpunit"
     }
 }

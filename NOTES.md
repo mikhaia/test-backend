@@ -11,4 +11,4 @@
 - Added request validation (e.g., title required, max length)
 - Added centralized error handling for consistent JSON responses
 - Added configuration file for app settings (DB, etc.) using .env file with phpdotenv
-- Add PHPUnit tests for integration and unit testing
+- Added PHPUnit tests for integration and unit testing
