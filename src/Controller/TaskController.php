@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\ValidationException;
 use App\Model\NotFoundException;
 use App\Storage\DataStorage;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,8 +23,8 @@ class TaskController
     public function listAction(Request $request)
     {
         $projectId = $request->attributes->get('id');
-        $limit = $request->attributes->get('limit', 10);
-        $offset = $request->attributes->get('offset', 0);
+        $limit = (int) $request->attributes->get('limit', 10);
+        $offset = (int) $request->attributes->get('offset', 0);
 
         // Validate limit and offset
         $validator = Validation::createValidator();
@@ -41,7 +42,7 @@ class TaskController
             foreach ($offsetErrors as $error) {
                 $errors[] = 'offset: ' . $error->getMessage();
             }
-            return new JsonResponse(['error' => 'Validation error', 'details' => $errors], 400);
+            throw new ValidationException($errors);
         }
 
         $tasks = $this->storage->getTasksByProjectId($projectId, $limit, $offset);
@@ -52,15 +53,11 @@ class TaskController
     {
         $projectId = $request->attributes->get('id');
 
-        try {
-            $project = $this->storage->getProjectById($projectId);
-        } catch (NotFoundException $e) {
-            return new JsonResponse(['error' => 'Project not found'], 404);
-        }
+        $project = $this->storage->getProjectById($projectId);
 
         $data = json_decode($request->getContent(), true);
         if (!is_array($data)) {
-            return new JsonResponse(['error' => 'Invalid JSON'], 400);
+            throw new ValidationException(['Invalid JSON']);
         }
 
         // Validate title
@@ -79,7 +76,7 @@ class TaskController
             foreach ($violations as $violation) {
                 $errors[] = $violation->getMessage();
             }
-            return new JsonResponse(['error' => 'Validation error', 'details' => $errors], 400);
+            throw new ValidationException($errors);
         }
 
         $task = $this->storage->createTask($data, $project->getId());

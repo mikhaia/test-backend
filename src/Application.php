@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use App\Exception\ValidationException;
+use App\Model\NotFoundException;
 
 class Application
 {
@@ -31,6 +33,10 @@ class Application
             $response = $this->handleRequest($request, $matcher);
         } catch (ResourceNotFoundException $e) {
             $response = new JsonResponse(['error' => 'Not found'], 404);
+        } catch (ValidationException $e) {
+            $response = new JsonResponse(['error' => $e->getMessage(), 'details' => $e->getErrors()], $e->getCode());
+        } catch (NotFoundException $e) {
+            $response = new JsonResponse(['error' => $e->getMessage()], $e->getCode());
         } catch (\Throwable $e) {
             $response = new JsonResponse(['error' => 'Something went wrong'], 500);
         }

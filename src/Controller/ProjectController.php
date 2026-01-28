@@ -21,13 +21,7 @@ class ProjectController
     {
         $id = $request->attributes->get('id');
 
-        try {
-            $project = $this->storage->getProjectById($id);
-            return new JsonResponse($project->toArray(), 200);
-        } catch (NotFoundException $e) {
-            return new JsonResponse(['error' => 'Project not found'], 404);
-        } catch (\Throwable $e) {
-            return new JsonResponse(['error' => 'Something went wrong'], 500);
-        }
+        $project = $this->storage->getProjectById($id);
+        return new JsonResponse($project->toArray(), 200);
     }
 }
