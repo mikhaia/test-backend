@@ -14,19 +14,19 @@ class Routes
         // GET /project/{id}
         $routes->add('project_show', new Route('/project/{id}', [
             '_controller' => 'App\Controller\ProjectController',
-            '_action' => 'projectAction',
+            '_action' => 'showAction',
         ], ['id' => '\d+'], [], '', [], ['GET']));
 
         // GET /project/{id}/tasks
         $routes->add('project_tasks', new Route('/project/{id}/tasks', [
-            '_controller' => 'App\Controller\ProjectController',
-            '_action' => 'projectTaskPagerAction',
+            '_controller' => 'App\Controller\TaskController',
+            '_action' => 'listAction',
         ], ['id' => '\d+'], [], '', [], ['GET']));
 
         // POST /project/{id}/tasks
         $routes->add('project_create_task', new Route('/project/{id}/tasks', [
-            '_controller' => 'App\Controller\ProjectController',
-            '_action' => 'projectCreateTaskAction',
+            '_controller' => 'App\Controller\TaskController',
+            '_action' => 'createAction',
         ], ['id' => '\d+'], [], '', [], ['POST']));
 
         return $routes;

@@ -7,10 +7,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use App\Storage\DataStorage;
 
 class Application
 {
+    /** @var ServiceContainer */
+    private $container;
+
+    public function __construct()
+    {
+        $this->container = new ServiceContainer();
+    }
+
     public function run()
     {
         $request = Request::createFromGlobals();
@@ -39,19 +46,8 @@ class Application
         $controllerClass = $parameters['_controller'];
         $action = $parameters['_action'];
 
-        $controller = $this->createController($controllerClass);
+        $controller = $this->container[$controllerClass];
 
         return $controller->$action($request);
-    }
-
-    private function createController(string $controllerClass)
-    {
-        // Simple factory — can be replaced with DI container later
-        switch ($controllerClass) {
-            case 'App\Controller\ProjectController':
-                return new \App\Controller\ProjectController(new DataStorage());
-            default:
-                throw new \RuntimeException("Unknown controller: $controllerClass");
-        }
     }
 }

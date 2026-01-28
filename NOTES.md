@@ -6,4 +6,5 @@
 - Added ORM to make queries cleaner and safer
 - Added database seeding for data generation
 - Added routes
-- Probably need to split by two different controllers ProjectController and TaskController
+- Splited by two different controllers ProjectController and TaskController
+- Added DI container

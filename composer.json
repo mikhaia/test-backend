@@ -7,7 +7,8 @@
         "symfony/http-foundation": "^5.2",
         "symfony/routing": "^5.2",
         "illuminate/database": "^7.0",
-        "illuminate/events": "^7.0"
+        "illuminate/events": "^7.0",
+        "pimple/pimple": "^3.5"
     },
     "autoload": {
         "psr-4": {
