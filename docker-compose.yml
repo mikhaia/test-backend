@@ -14,11 +14,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      - DB_HOST=db
-      - DB_NAME=task_tracker
-      - DB_USER=user
-      - DB_PASSWORD=password
+    env_file:
+      - .env
     networks:
       - task-tracker-network
 
