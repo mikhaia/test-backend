@@ -2,31 +2,22 @@
 
 namespace App\Model;
 
-class Project
+use Illuminate\Database\Eloquent\Model;
+
+class Project extends Model
 {
-    /**
-     * @var array
-     */
-    public $_data;
-    
-    public function __construct($data)
+    protected $table = 'project';
+    public $timestamps = false; // we only have created_at
+
+    protected $fillable = ['title', 'created_at'];
+
+    public function tasks()
     {
-        $this->_data = $data;
+        return $this->hasMany(Task::class, 'project_id');
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
-        return (int) $this->_data['id'];
-    }
-
-    /**
-     * @return string
-     */
-    public function toJson()
-    {
-        return json_encode($this->_data);
+        return (int) $this->getAttribute('id');
     }
 }

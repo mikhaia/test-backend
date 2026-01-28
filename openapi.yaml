@@ -1,0 +1,208 @@
+openapi: 3.0.3
+info:
+  title: Test Backend API
+  version: 1.0.0
+  description: |
+    Minimal OpenAPI specification for the Projects/Tasks API described in README.md.
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Booking.com
+        created_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp
+          example: '2021-04-23T10:00:00+01:00'
+      required:
+        - id
+        - title
+        - created_at
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Create UI mockups
+        created_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp (optional)
+          example: '2021-04-23T12:00:00+01:00'
+      required:
+        - id
+        - title
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Project not found
+        code:
+          type: string
+          example: not_found
+        details:
+          type: array
+          items:
+            type: string
+          description: Optional additional details
+      required:
+        - error
+        - code
+  parameters:
+    ProjectId:
+      name: id
+      in: path
+      description: Project id
+      required: true
+      schema:
+        type: integer
+        example: 1201
+    Limit:
+      name: limit
+      in: query
+      description: Maximum number of tasks to return
+      required: false
+      schema:
+        type: integer
+        default: 10
+        maximum: 100
+    Offset:
+      name: offset
+      in: query
+      description: Offset for pagination
+      required: false
+      schema:
+        type: integer
+        default: 0
+paths:
+  /project/{id}:
+    get:
+      summary: Retrieve project entity by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: Project found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    title: Booking.com
+                    created_at: '2021-04-23T10:00:00+01:00'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  value:
+                    error: Project not found
+                    code: not_found
+  /project/{id}/tasks:
+    get:
+      summary: Retrieve project tasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+              examples:
+                tasks:
+                  value:
+                    - id: 1
+                      title: Create UI mockups
+                    - id: 2
+                      title: Implement login form
+        '400':
+          description: Invalid pagination parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Create task for project
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  maxLength: 255
+                  example: Implement API for hotels search
+              required:
+                - title
+      responses:
+        '201':
+          description: Task created
+          headers:
+            Location:
+              description: URL of the created task
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              examples:
+                created:
+                  value:
+                    id: 21
+                    title: Implement API for hotels search
+                    created_at: '2021-04-23T13:00:00+01:00'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+security:
+  - bearerAuth: []

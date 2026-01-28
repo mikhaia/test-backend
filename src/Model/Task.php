@@ -2,23 +2,27 @@
 
 namespace App\Model;
 
-class Task implements \JsonSerializable
+use Illuminate\Database\Eloquent\Model;
+
+class Task extends Model
 {
-    /**
-     * @var array
-     */
-    private $_data;
-    
-    public function __construct($data)
+    protected $table = 'task';
+    public $timestamps = false; // we manage created_at manually
+
+    protected $fillable = ['project_id', 'title', 'status', 'created_at'];
+
+    public function project()
     {
-        $this->_data = $data;
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
-        return $this->_data;
+        return $this->toArray();
+    }
+
+    public function getId()
+    {
+        return (int) $this->getAttribute('id');
     }
 }

@@ -2,33 +2,33 @@
 
 namespace App\Storage;
 
-use App\Model;
+use App\Database;
+use App\Model\Project;
+use App\Model\Task;
+use App\Model\NotFoundException;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DataStorage
 {
-    /**
-     * @var \PDO 
-     */
-    public $pdo;
-
     public function __construct()
     {
-        $this->pdo = new \PDO('mysql:dbname=task_tracker;host=127.0.0.1', 'user');
+        // bootstrap Eloquent
+        Database::bootFromEnv();
     }
 
     /**
      * @param int $projectId
-     * @throws Model\NotFoundException
+     * @throws NotFoundException
      */
     public function getProjectById($projectId)
     {
-        $stmt = $this->pdo->query('SELECT * FROM project WHERE id = ' . (int) $projectId);
+        $project = Project::find($projectId);
 
-        if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            return new Model\Project($row);
+        if (!$project) {
+            throw new NotFoundException();
         }
 
-        throw new Model\NotFoundException();
+        return $project;
     }
 
     /**
@@ -38,34 +38,34 @@ class DataStorage
      */
     public function getTasksByProjectId(int $project_id, $limit, $offset)
     {
-        $stmt = $this->pdo->query("SELECT * FROM task WHERE project_id = $project_id LIMIT ?, ?");
-        $stmt->execute([$limit, $offset]);
+        $limit = (int) ($limit ?? 10);
+        $offset = (int) ($offset ?? 0);
 
-        $tasks = [];
-        foreach ($stmt->fetchAll() as $row) {
-            $tasks[] = new Model\Task($row);
-        }
+        $tasks = Task::where('project_id', $project_id)
+            ->limit($limit)
+            ->offset($offset)
+            ->get();
 
-        return $tasks;
+        return $tasks->all();
     }
 
     /**
      * @param array $data
      * @param int $projectId
-     * @return Model\Task
+     * @return Task
      */
     public function createTask(array $data, $projectId)
     {
-        $data['project_id'] = $projectId;
+        $project = $this->getProjectById($projectId);
 
-        $fields = implode(',', array_keys($data));
-        $values = implode(',', array_map(function ($v) {
-            return is_string($v) ? '"' . $v . '"' : $v;
-        }, $data));
+        $payload = [
+            'title' => $data['title'] ?? null,
+            'status' => $data['status'] ?? 'todo',
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
 
-        $this->pdo->query("INSERT INTO task ($fields) VALUES ($values)");
-        $data['id'] = $this->pdo->query('SELECT MAX(id) FROM task')->fetchColumn();
+        $task = $project->tasks()->create($payload);
 
-        return new Model\Task($data);
+        return $task;
     }
 }

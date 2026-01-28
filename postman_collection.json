@@ -1,0 +1,216 @@
+{
+  "info": {
+    "_postman_id": "d7f6b8a3-9c6b-4fd1-9f4d-1f4f4e6e2a7a",
+    "name": "Test Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Projects/Tasks API (see README.md). Uses {{base_url}} and Bearer token {{token}}."
+  },
+  "item": [
+    {
+      "name": "GET /project/{id}",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/project/{{id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "project",
+            "{{id}}"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {},
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"id\": 1,\n  \"title\": \"Booking.com\",\n  \"created_at\": \"2021-04-23T10:00:00+01:00\"\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"error\": \"Project not found\",\n  \"code\": \"not_found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "GET /project/{id}/tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/project/{{id}}/tasks?limit={{limit}}&offset={{offset}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "project",
+            "{{id}}",
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "{{limit}}"
+            },
+            {
+              "key": "offset",
+              "value": "{{offset}}"
+            }
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {},
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n  { \"id\": 1, \"title\": \"Create UI mockups\" },\n  { \"id\": 2, \"title\": \"Implement login form\" }\n]"
+        },
+        {
+          "name": "400 Bad Request",
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"error\": \"Invalid pagination parameters\",\n  \"code\": \"invalid_pagination\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "POST /project/{id}/tasks",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Implement API for hotels search\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/project/{{id}}/tasks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "project",
+            "{{id}}",
+            "tasks"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1201"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "originalRequest": {},
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Location",
+              "value": "{{base_url}}/project/1201/tasks/21"
+            }
+          ],
+          "body": "{\n  \"id\": 21,\n  \"title\": \"Implement API for hotels search\",\n  \"created_at\": \"2021-04-23T13:00:00+01:00\"\n}"
+        },
+        {
+          "name": "400 Bad Request",
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"error\": \"Validation error\",\n  \"code\": \"validation_error\",\n  \"details\": [\"title is required\"]\n}"
+        },
+        {
+          "name": "404 Not Found",
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "body": "{\n  \"error\": \"Project not found\",\n  \"code\": \"not_found\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "limit",
+      "value": "10"
+    },
+    {
+      "key": "offset",
+      "value": "0"
+    }
+  ]
+}
