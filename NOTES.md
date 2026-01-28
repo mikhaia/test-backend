@@ -8,3 +8,7 @@
 - Added routes
 - Splited by two different controllers ProjectController and TaskController
 - Added DI container
+- Added request validation (e.g., title required, max length)
+- Add centralized error handling for consistent JSON responses
+- Add configuration file for app settings (DB, etc.)
+- Add PHPUnit tests for integration and unit testing
