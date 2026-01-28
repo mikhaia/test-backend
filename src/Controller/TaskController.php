@@ -20,8 +20,8 @@ class TaskController
     public function listAction(Request $request)
     {
         $projectId = $request->attributes->get('id');
-        $limit = $request->query->get('limit', 10);
-        $offset = $request->query->get('offset', 0);
+        $limit = $request->attributes->get('limit', 10);
+        $offset = $request->attributes->get('offset', 0);
 
         $tasks = $this->storage->getTasksByProjectId($projectId, $limit, $offset);
         return new JsonResponse($tasks, 200);

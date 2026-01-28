@@ -18,10 +18,14 @@ class Routes
         ], ['id' => '\d+'], [], '', [], ['GET']));
 
         // GET /project/{id}/tasks
-        $routes->add('project_tasks', new Route('/project/{id}/tasks', [
+        $routes->add('project_tasks', new Route('/project/{id}/tasks/{limit}/{offset}', [
             '_controller' => 'App\Controller\TaskController',
             '_action' => 'listAction',
-        ], ['id' => '\d+'], [], '', [], ['GET']));
+        ], [
+            'id' => '\d+',
+            'limit' => '\d+',
+            'offset' => '\d+'
+        ], [], '', [], ['GET']));
 
         // POST /project/{id}/tasks
         $routes->add('project_create_task', new Route('/project/{id}/tasks', [

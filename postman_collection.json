@@ -70,29 +70,29 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/project/:id/tasks?limit={{limit}}&offset={{offset}}",
+          "raw": "{{base_url}}/project/:id/tasks/:limit/:offset",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "project",
             ":id",
-            "tasks"
-          ],
-          "query": [
-            {
-              "key": "limit",
-              "value": "{{limit}}"
-            },
-            {
-              "key": "offset",
-              "value": "{{offset}}"
-            }
+            "tasks",
+            ":limit",
+            ":offset"
           ],
           "variable": [
             {
               "key": "id",
               "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "offset",
+              "value": "0"
             }
           ]
         }
@@ -139,7 +139,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"title\": \"Implement API for hotels search\"\n}"
+          "raw": "{\n  \"title\": \"{{title}}\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/project/:id/tasks",
@@ -205,16 +205,8 @@
       "value": ""
     },
     {
-      "key": "id",
-      "value": "1"
-    },
-    {
-      "key": "limit",
-      "value": "10"
-    },
-    {
-      "key": "offset",
-      "value": "0"
+      "key": "title",
+      "value": "Implement API for hotels search"
     }
   ]
 }
