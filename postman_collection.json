@@ -18,13 +18,13 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/project/{{id}}",
+          "raw": "{{base_url}}/project/:id",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "project",
-            "{{id}}"
+            ":id"
           ],
           "variable": [
             {
@@ -70,13 +70,13 @@
           }
         ],
         "url": {
-          "raw": "{{base_url}}/project/{{id}}/tasks?limit={{limit}}&offset={{offset}}",
+          "raw": "{{base_url}}/project/:id/tasks?limit={{limit}}&offset={{offset}}",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "project",
-            "{{id}}",
+            ":id",
             "tasks"
           ],
           "query": [
@@ -142,13 +142,13 @@
           "raw": "{\n  \"title\": \"Implement API for hotels search\"\n}"
         },
         "url": {
-          "raw": "{{base_url}}/project/{{id}}/tasks",
+          "raw": "{{base_url}}/project/:id/tasks",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "project",
-            "{{id}}",
+            ":id",
             "tasks"
           ],
           "variable": [
@@ -203,6 +203,10 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "id",
+      "value": "1"
     },
     {
       "key": "limit",
