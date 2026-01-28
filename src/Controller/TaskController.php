@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Exception\ValidationException;
-use App\Model\NotFoundException;
 use App\Storage\DataStorage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Validation;
 
 class TaskController
@@ -28,8 +30,8 @@ class TaskController
 
         // Validate limit and offset
         $validator = Validation::createValidator();
-        $limitConstraint = new Assert\Range(['min' => 1, 'max' => 100]);
-        $offsetConstraint = new Assert\Range(['min' => 0]);
+        $limitConstraint = new Range(['min' => 1, 'max' => 100]);
+        $offsetConstraint = new Range(['min' => 0]);
 
         $limitErrors = $validator->validate($limit, $limitConstraint);
         $offsetErrors = $validator->validate($offset, $offsetConstraint);
@@ -62,10 +64,10 @@ class TaskController
 
         // Validate title
         $validator = Validation::createValidator();
-        $constraints = new Assert\Collection([
+        $constraints = new Collection([
             'title' => [
-                new Assert\NotBlank(['message' => 'Title is required']),
-                new Assert\Length(['max' => 255, 'maxMessage' => 'Title must be at most {{ limit }} characters']),
+                new NotBlank(['message' => 'Title is required']),
+                new Length(['max' => 255, 'maxMessage' => 'Title must be at most {{ limit }} characters']),
             ],
         ]);
 

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Model\NotFoundException;
 use App\Storage\DataStorage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
